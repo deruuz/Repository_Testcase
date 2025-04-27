@@ -15,25 +15,47 @@ class TestCaseController extends Controller
      * Display a listing of the resource.
      */
     public function index(Request $request)
-    {
-        $testCases = TestCase::query()
-            ->when($request->search, function ($query) use ($request) {
-                $query->where('nama_test_case', 'like', '%' . $request->search . '%')
-                    ->orWhere('kategori', 'like', '%' . $request->search . '%')
-                    ->orWhere('type', 'like', '%' . $request->search . '%');
-            })
-            ->paginate(10);
+    // {
+    //     $testCases = TestCase::query()
+    //         ->when($request->search, function ($query) use ($request) {
+    //             $query->where('nama_test_case', 'like', '%' . $request->search . '%')
+    //                 ->orWhere('kategori', 'like', '%' . $request->search . '%')
+    //                 ->orWhere('type', 'like', '%' . $request->search . '%');
+    //         })
+    //         ->paginate(10);
 
+    //     return view('admin.testcases.index', compact('testCases'));
+    // }
+    {
+        $perPage = $request->get('perPage', 10); // Ambil perPage dari URL, default 10 kalau kosong
+    
+        $query = TestCase::query();
+    
+        if ($search = $request->get('search')) {
+            $query->where('nama_test_case', 'like', "%$search%")
+                  ->orWhere('steps', 'like', "%$search%")
+                  ->orWhere('expected_result', 'like', "%$search%");
+        }
+    
+        $testCases = $query->paginate($perPage)->appends($request->except('page'));
+    
         return view('admin.testcases.index', compact('testCases'));
     }
 
     /**
      * Show the form for creating a new resource.
      */
+    // public function create()
+    // {
+    //     return view('admin.testcases.create');
+    // }
     public function create()
-    {
-        return view('admin.testcases.create');
-    }
+{
+    $lastTestcase = TestCase::orderBy('nomor', 'desc')->first();
+    $nextNomor = $lastTestcase ? $lastTestcase->nomor + 1 : 1;
+
+    return view('admin.testcases.create', compact('nextNomor'));
+}//baru ditambah
 
     /**
      * Store a newly created resource in storage.
@@ -118,3 +140,4 @@ class TestCaseController extends Controller
         return Excel::download(new TestCaseSelectedExport($ids), 'selected_testcases.xlsx');
     }
 }
+

@@ -15,17 +15,32 @@ class GuestTestCaseController extends Controller
      * Show test cases to guest user at landing page.
      */
     public function index(Request $request)
-    {
-        $testCases = TestCase::query()
-            ->when($request->search, function ($query) use ($request) {
-                $query->where('nama_test_case', 'like', '%' . $request->search . '%')
-                    ->orWhere('kategori', 'like', '%' . $request->search . '%')
-                    ->orWhere('type', 'like', '%' . $request->search . '%')
-                    ->orWhere('steps', 'like', '%' . $request->search . '%')
-                    ->orWhere('expected_result', 'like', '%' . $request->search . '%');
-            })
-            ->paginate(10);
+    // {
+    //     $testCases = TestCase::query()
+    //         ->when($request->search, function ($query) use ($request) {
+    //             $query->where('nama_test_case', 'like', '%' . $request->search . '%')
+    //                 ->orWhere('kategori', 'like', '%' . $request->search . '%')
+    //                 ->orWhere('type', 'like', '%' . $request->search . '%')
+    //                 ->orWhere('steps', 'like', '%' . $request->search . '%')
+    //                 ->orWhere('expected_result', 'like', '%' . $request->search . '%');
+    //         })
+    //         ->paginate(10);
 
+    //     return view('welcome', compact('testCases'));
+    // }
+    {
+        $perPage = $request->get('perPage', 10); // Ambil perPage dari URL, default 10 kalau kosong
+    
+        $query = TestCase::query();
+    
+        if ($search = $request->get('search')) {
+            $query->where('nama_test_case', 'like', "%$search%")
+                  ->orWhere('steps', 'like', "%$search%")
+                  ->orWhere('expected_result', 'like', "%$search%");
+        }
+    
+        $testCases = $query->paginate($perPage)->appends($request->except('page'));
+    
         return view('welcome', compact('testCases'));
     }
 

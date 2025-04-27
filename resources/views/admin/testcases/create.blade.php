@@ -22,6 +22,7 @@
     </h2>
 
     <form
+      onsubmit="tinymce.triggerSave()"
       action="{{ route('admin.testcases.store') }}"
       method="POST"
       class="space-y-6 bg-white dark:bg-gray-800 shadow-md rounded-lg p-6"
@@ -35,12 +36,21 @@
         >
           Number
         </label>
-        <input
+        <!-- <input
           type="number"
           name="nomor"
           id="nomor"
           class="w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:text-white"
           required
+        /> -->
+        <input
+          type="number"
+          name="nomor"
+          id="nomor"
+          value="{{ $nextNomor }}"
+          class="w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+          required
+          readonly
         />
       </div>
 
@@ -83,13 +93,13 @@
         >
           TestCase Name
         </label>
-        <input
+        <textarea
           type="text"
           name="nama_test_case"
           id="nama_test_case"
           class="w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-          required
-        />
+        ></textarea>
+        <!-- required -->
       </div>
 
       <div class="flex flex-col gap-2">
@@ -104,8 +114,8 @@
           id="steps"
           rows="5"
           class="w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:text-white resize-none"
-          required
         ></textarea>
+        <!-- required -->
       </div>
 
       <div class="flex flex-col gap-2">
@@ -135,8 +145,8 @@
           id="expected_result"
           rows="5"
           class="w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:text-white resize-none"
-          required
         ></textarea>
+        <!-- required -->
       </div>
 
       <div class="flex justify-end">

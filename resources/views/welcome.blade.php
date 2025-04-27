@@ -264,7 +264,7 @@
                 <th class="w-20 px-4 py-3">No</th>
                 <th class="w-32 px-4 py-3">Category</th>
                 <th class="w-32 px-4 py-3">Type</th>
-                <th class="w-64 px-4 py-3">Name TestCase</th>
+                <th class="w-64 px-4 py-3">TestCase Name / Description</th>
                 <th class="w-96 px-4 py-3">Steps</th>
                 <th class="w-96 px-4 py-3">Test Data</th>
                 <th class="w-96 px-4 py-3">Expected Result</th>
@@ -514,8 +514,62 @@
           </table>
         </div>
 
-        <div class="mt-4">
+        <!-- <div class="mt-4">
           {{ $testCases->links() }}
+        </div> -->
+        <!-- Pagination with Entries per Page on the right -->
+        <div
+          class="mt-6 flex flex-col md:flex-row justify-between items-center"
+        >
+          <!-- Entries per Page Dropdown (right side) -->
+          <form method="GET" class="flex items-center gap-2 mb-4 md:mb-0">
+            <label class="text-sm text-gray-600 dark:text-gray-400">Show</label>
+            <select
+              name="perPage"
+              onchange="this.form.submit()"
+              class="w-20 p-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+            >
+              <option
+                value="10"
+                {{ request('perPage') == '10' ? 'selected' : '' }}
+              >
+                10
+              </option>
+              <option
+                value="25"
+                {{ request('perPage') == '25' ? 'selected' : '' }}
+              >
+                25
+              </option>
+              <option
+                value="50"
+                {{ request('perPage') == '50' ? 'selected' : '' }}
+              >
+                50
+              </option>
+              <option
+                value="100"
+                {{ request('perPage') == '100' ? 'selected' : '' }}
+              >
+                100
+              </option>
+              <option
+                value="200"
+                {{ request('perPage') == '200' ? 'selected' : '' }}
+              >
+                200
+              </option>
+            </select>
+            <span class="text-sm text-gray-600 dark:text-gray-400">
+              entries
+            </span>
+          </form>
+
+          <!-- Pagination Controls (left side) -->
+          <div class="mb-4 md:mb-0">
+            {{ $testCases->links() }}
+            <!-- This will render pagination controls -->
+          </div>
         </div>
       </div>
 

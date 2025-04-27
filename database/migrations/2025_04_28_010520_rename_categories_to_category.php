@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCategoriesTable extends Migration
+class RenameCategoriesToCategory extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,8 @@ class CreateCategoriesTable extends Migration
      */
     public function up()
     {
-        Schema::create('category', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');  // Nama kategori
-            $table->text('description')->nullable();  // Deskripsi kategori
-            $table->timestamps();
-        });
+        // Ganti nama tabel dari 'categories' menjadi 'category'
+        Schema::rename('categories', 'category');
     }
 
     /**
@@ -28,6 +24,7 @@ class CreateCategoriesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('category');
+        // Kembalikan nama tabel dari 'category' menjadi 'categories'
+        Schema::rename('category', 'categories');
     }
 }
