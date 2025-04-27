@@ -19,6 +19,6 @@ class Type extends Model
     // Relasi ke TestCase
     public function testCases()
     {
-        return $this->hasMany(TestCase::class, 'type'); // Relasi ke banyak TestCase
+        return $this->hasMany(TestCase::class, 'type_id'); // Relasi ke banyak TestCase
     }
 }

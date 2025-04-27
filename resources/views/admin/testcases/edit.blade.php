@@ -44,7 +44,8 @@
         />
       </div>
 
-      <div class="flex flex-col gap-2">
+      <!-- category -->
+      <!-- <div class="flex flex-col gap-2">
         <label
           for="kategori"
           class="text-sm font-semibold text-gray-700 dark:text-gray-200"
@@ -59,9 +60,29 @@
           class="w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:text-white"
           required
         />
+      </div> -->
+      <div class="flex flex-col gap-2">
+        <label
+          for="kategori"
+          class="text-sm font-semibold text-gray-700 dark:text-gray-200"
+        >
+          Category
+        </label>
+        <select
+          name="kategori"
+          id="kategori"
+          class="w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+          required
+        >
+          <option value="" disabled selected>Select Category</option>
+          @foreach ($category as $item)
+            <option value="{{ $item->id }}">{{ $item->name }}</option>
+          @endforeach
+        </select>
       </div>
 
-      <div class="flex flex-col gap-2">
+      <!-- type -->
+      <!-- <div class="flex flex-col gap-2">
         <label
           for="type"
           class="text-sm font-semibold text-gray-700 dark:text-gray-200"
@@ -76,6 +97,25 @@
           class="w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:text-white"
           required
         />
+      </div> -->
+      <div class="flex flex-col gap-2">
+        <label
+          for="type"
+          class="text-sm font-semibold text-gray-700 dark:text-gray-200"
+        >
+          Type
+        </label>
+        <select
+          name="type"
+          id="type"
+          class="w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+          required
+        >
+          <option value="" disabled selected>Select Type</option>
+          @foreach ($type as $cat)
+            <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+          @endforeach
+        </select>
       </div>
 
       <div class="flex flex-col gap-2">

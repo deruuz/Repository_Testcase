@@ -110,10 +110,9 @@
                 />
               </td>
               <td class="px-6 py-4">{{ $testcase->nomor }}</td>
-              <td class="px-6 py-4">
-                {{ $testcase->kategori }}
-              </td>
-              <td class="px-6 py-4">{{ $testcase->type }}</td>
+              <td>{{ $testcase->category->name ?? '-' }}</td>
+              <td>{{ $testcase->type->name ?? '-' }}</td>
+
               <td class="px-6 py-4">
                 {{ $testcase->nama_test_case }}
               </td>

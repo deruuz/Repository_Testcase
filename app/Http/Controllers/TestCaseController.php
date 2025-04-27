@@ -9,6 +9,10 @@ use App\Exports\TestCaseExport;
 use App\Exports\TestCaseSelectedExport;
 use Illuminate\Routing\Controller;
 
+use App\Models\Category;
+use App\Models\Type;
+
+
 class TestCaseController extends Controller
 {
     /**
@@ -29,7 +33,8 @@ class TestCaseController extends Controller
     {
         $perPage = $request->get('perPage', 10); // Ambil perPage dari URL, default 10 kalau kosong
     
-        $query = TestCase::query();
+        // $query = TestCase::query();
+        $query = TestCase::with(['category', 'type']);
     
         if ($search = $request->get('search')) {
             $query->where('nama_test_case', 'like', "%$search%")
@@ -51,10 +56,15 @@ class TestCaseController extends Controller
     // }
     public function create()
 {
+    // Ambil data kategori dan tipe dari database
+    $category = Category::all(); // Ganti dengan model kategori Anda
+    $type = Type::all(); // Ganti dengan model tipe Anda
+
     $lastTestcase = TestCase::orderBy('nomor', 'desc')->first();
     $nextNomor = $lastTestcase ? $lastTestcase->nomor + 1 : 1;
 
-    return view('admin.testcases.create', compact('nextNomor'));
+    return view('admin.testcases.create', compact('nextNomor', 'category', 'type'));
+
 }//baru ditambah
 
     /**
@@ -83,7 +93,10 @@ class TestCaseController extends Controller
      */
     public function edit(TestCase $testcase)
     {
-        return view('admin.testcases.edit', compact('testcase'));
+        $category = Category::all(); // Ambil semua kategori
+    $type = Type::all(); // Ambil semua tipe
+
+    return view('admin.testcases.edit', compact('testcase', 'category', 'type'));
     }
 
     /**

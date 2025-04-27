@@ -20,4 +20,14 @@ class TestCase extends Model
         'test_data',
         'expected_result'
     ];
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'kategori');
+    }
+
+    public function type()
+    {
+        return $this->belongsTo(Type::class, 'type');
+    }
 }

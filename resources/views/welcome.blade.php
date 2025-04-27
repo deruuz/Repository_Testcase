@@ -220,6 +220,13 @@
 
           <!-- Action Buttons -->
           <div class="flex flex-col md:flex-row gap-2">
+            <button
+              type="button"
+              onclick="copySelectedTexts()"
+              class="px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white text-sm font-semibold rounded-lg transition duration-200 w-full md:w-auto"
+            >
+              Category
+            </button>
             <form
               id="export-selected-form"
               method="POST"
@@ -319,10 +326,10 @@
 
                   <!-- Kategori -->
                   <td class="px-4 py-4 relative">
-                    {{ $testcase->kategori }}
+                    {{ $testcase->category->name ?? '-' }}
                     <button
                       type="button"
-                      onclick="copyText(`{{ $testcase->kategori }}`)"
+                      onclick="copyText(`{{ $testcase->kategori->name ?? '-' }}`)"
                       class="copy-btn invisible group-hover:visible absolute top-1/2 right-2 transform -translate-y-1/2 text-xs"
                       title="Copy Kategori"
                     >
@@ -351,10 +358,10 @@
 
                   <!-- Type -->
                   <td class="px-4 py-4 relative">
-                    {{ $testcase->type }}
+                    {{ $testcase->type->name ?? '-' }}
                     <button
                       type="button"
-                      onclick="copyText(`{{ $testcase->type }}`)"
+                      onclick="copyText(`{{ $testcase->type->name ?? '-' }}`)"
                       class="copy-btn invisible group-hover:visible absolute top-1/2 right-2 transform -translate-y-1/2 text-xs"
                       title="Copy Type"
                     >
@@ -757,7 +764,7 @@
 
                 <!-- github -->
                 <a
-                  href="#"
+                  href="https://github.com/deruuz/Repository_testcase"
                   class="text-gray-500 hover:text-gray-900 dark:hover:text-white ms-5"
                 >
                   <svg
