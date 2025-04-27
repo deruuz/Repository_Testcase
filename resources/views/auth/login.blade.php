@@ -25,14 +25,17 @@
         </script>
     @endif
     <section
-        class="flex justify-center items-center pt-28 pb-44 bg-gray-900 bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/hero-pattern.svg')] dark:bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/hero-pattern-dark.svg')]">
+        class="flex justify-center items-center h-screen bg-gray-900 bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/hero-pattern.svg')] dark:bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/hero-pattern-dark.svg')]">
         <div
             class="w-full max-w-sm p-8 rounded-lg shadow-lg bg-gray-800 bg-opacity-50 border-2 border-blue-500 neon-border">
-            <div class="flex justify-center mb-6">
+
+            <!-- logo -->
+            <!-- <div class="flex justify-center mb-6">
                 <img src="{{ asset('img/WD.png') }}" alt="Logo" class="h-12">
-            </div>
+            </div> -->
+            
             <form class="space-y-6" action="{{ route('login') }}" method="POST">
-                <h5 class="text-xl font-medium text-white text-center">Login to Your Account</h5>
+                <h5 class="text-xl font-medium text-white text-center">Login to Dashboard</h5>
                 @csrf
                 <div>
                     <label for="email" class="block mb-2 text-sm font-medium text-gray-300">Email:</label>
@@ -51,7 +54,8 @@
                     Sign in
                 </button>
 
-                <a href=""
+                <!-- with google -->
+                <!-- <a href=""
                     class="relative inline-flex items-center justify-center w-full px-4 py-4 text-base font-semibold text-gray-200 transition-all duration-200 bg-gray-800 border border-gray-600 rounded-md hover:bg-gray-700 focus:bg-gray-700 hover:text-white focus:text-white focus:outline-none">
                     <div class="absolute inset-y-0 left-0 p-4">
                         <svg class="w-6 h-6 text-blue-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
@@ -62,7 +66,8 @@
                         </svg>
                     </div>
                     Sign in dengan Google
-                </a>
+                </a> -->
+
                 {{-- <p class="text-gray-300 text-center">Belum punya akun? <a class="text-blue-500"
                         href="{{ route('register') }}">Register</a></p> --}}
             </form>

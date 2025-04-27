@@ -106,7 +106,7 @@
 
             <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-6">
                 <!-- Search Box -->
-                <form method="GET" class="flex w-full md:w-auto gap-2">
+                <form method="GET" action="#testcaseTable" class="flex w-full md:w-auto gap-2">
                     <input type="text" id="searchInput" name="search" value="{{ request('search') }}"
                         placeholder="Search Test Case..."
                         class="w-full md:w-80 p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:text-white">
@@ -166,7 +166,11 @@
                                     {{ $testcase->nomor }}
                                     <button type="button" onclick="copyText('{{ $testcase->nomor }}')"
                                         class="copy-btn invisible group-hover:visible absolute top-1/2 right-2 transform -translate-y-1/2 text-xs"
-                                        title="Copy Nomor">📋</button>
+                                        title="Copy Nomor"><svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+  <path fill-rule="evenodd" d="M18 3a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-1V9a4 4 0 0 0-4-4h-3a1.99 1.99 0 0 0-1 .267V5a2 2 0 0 1 2-2h7Z" clip-rule="evenodd"/>
+  <path fill-rule="evenodd" d="M8 7.054V11H4.2a2 2 0 0 1 .281-.432l2.46-2.87A2 2 0 0 1 8 7.054ZM10 7v4a2 2 0 0 1-2 2H4v6a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3Z" clip-rule="evenodd"/>
+</svg>
+</button>
                                 </td>
 
                                 <!-- Kategori -->
@@ -174,7 +178,11 @@
                                     {{ $testcase->kategori }}
                                     <button type="button" onclick="copyText(`{{ $testcase->kategori }}`)"
                                         class="copy-btn invisible group-hover:visible absolute top-1/2 right-2 transform -translate-y-1/2 text-xs"
-                                        title="Copy Kategori">📋</button>
+                                        title="Copy Kategori"><svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+  <path fill-rule="evenodd" d="M18 3a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-1V9a4 4 0 0 0-4-4h-3a1.99 1.99 0 0 0-1 .267V5a2 2 0 0 1 2-2h7Z" clip-rule="evenodd"/>
+  <path fill-rule="evenodd" d="M8 7.054V11H4.2a2 2 0 0 1 .281-.432l2.46-2.87A2 2 0 0 1 8 7.054ZM10 7v4a2 2 0 0 1-2 2H4v6a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3Z" clip-rule="evenodd"/>
+</svg>
+</button>
                                 </td>
 
                                 <!-- Type -->
@@ -182,7 +190,11 @@
                                     {{ $testcase->type }}
                                     <button type="button" onclick="copyText(`{{ $testcase->type }}`)"
                                         class="copy-btn invisible group-hover:visible absolute top-1/2 right-2 transform -translate-y-1/2 text-xs"
-                                        title="Copy Type">📋</button>
+                                        title="Copy Type"><svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+  <path fill-rule="evenodd" d="M18 3a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-1V9a4 4 0 0 0-4-4h-3a1.99 1.99 0 0 0-1 .267V5a2 2 0 0 1 2-2h7Z" clip-rule="evenodd"/>
+  <path fill-rule="evenodd" d="M8 7.054V11H4.2a2 2 0 0 1 .281-.432l2.46-2.87A2 2 0 0 1 8 7.054ZM10 7v4a2 2 0 0 1-2 2H4v6a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3Z" clip-rule="evenodd"/>
+</svg>
+</button>
                                 </td>
 
                                 <!-- Nama TestCase -->
@@ -190,7 +202,11 @@
                                     {{ $testcase->nama_test_case }}
                                     <button type="button" onclick="copyText(`{{ $testcase->nama_test_case }}`)"
                                         class="copy-btn invisible group-hover:visible absolute top-1/2 right-2 transform -translate-y-1/2 text-xs"
-                                        title="Copy Nama TestCase">📋</button>
+                                        title="Copy Nama TestCase"><svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+  <path fill-rule="evenodd" d="M18 3a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-1V9a4 4 0 0 0-4-4h-3a1.99 1.99 0 0 0-1 .267V5a2 2 0 0 1 2-2h7Z" clip-rule="evenodd"/>
+  <path fill-rule="evenodd" d="M8 7.054V11H4.2a2 2 0 0 1 .281-.432l2.46-2.87A2 2 0 0 1 8 7.054ZM10 7v4a2 2 0 0 1-2 2H4v6a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3Z" clip-rule="evenodd"/>
+</svg>
+</button>
                                 </td>
 
                                 <!-- Steps -->
@@ -198,7 +214,11 @@
                                     {!! nl2br(e($testcase->steps)) !!}
                                     <button type="button" onclick="copyText(`{{ strip_tags($testcase->steps) }}`)"
                                         class="copy-btn invisible group-hover:visible absolute top-1/2 right-2 transform -translate-y-1/2 text-xs"
-                                        title="Copy Steps">📋</button>
+                                        title="Copy Steps"><svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+  <path fill-rule="evenodd" d="M18 3a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-1V9a4 4 0 0 0-4-4h-3a1.99 1.99 0 0 0-1 .267V5a2 2 0 0 1 2-2h7Z" clip-rule="evenodd"/>
+  <path fill-rule="evenodd" d="M8 7.054V11H4.2a2 2 0 0 1 .281-.432l2.46-2.87A2 2 0 0 1 8 7.054ZM10 7v4a2 2 0 0 1-2 2H4v6a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3Z" clip-rule="evenodd"/>
+</svg>
+</button>
                                 </td>
 
                                 <!-- Test Data -->
@@ -206,7 +226,11 @@
                                     {!! nl2br(e($testcase->test_data)) !!}
                                     <button type="button" onclick="copyText(`{{ strip_tags($testcase->test_data) }}`)"
                                         class="copy-btn invisible group-hover:visible absolute top-1/2 right-2 transform -translate-y-1/2 text-xs"
-                                        title="Copy Steps">📋</button>
+                                        title="Copy Steps"><svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+  <path fill-rule="evenodd" d="M18 3a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-1V9a4 4 0 0 0-4-4h-3a1.99 1.99 0 0 0-1 .267V5a2 2 0 0 1 2-2h7Z" clip-rule="evenodd"/>
+  <path fill-rule="evenodd" d="M8 7.054V11H4.2a2 2 0 0 1 .281-.432l2.46-2.87A2 2 0 0 1 8 7.054ZM10 7v4a2 2 0 0 1-2 2H4v6a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3Z" clip-rule="evenodd"/>
+</svg>
+</button>
                                 </td>
 
                                 <!-- Expected Result -->
@@ -215,7 +239,12 @@
                                     <button type="button"
                                         onclick="copyText(`{{ strip_tags($testcase->expected_result) }}`)"
                                         class="copy-btn invisible group-hover:visible absolute top-1/2 right-2 transform -translate-y-1/2 text-xs"
-                                        title="Copy Expected Result">📋</button>
+                                        title="Copy Expected Result">
+                                        <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                                            <path fill-rule="evenodd" d="M18 3a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-1V9a4 4 0 0 0-4-4h-3a1.99 1.99 0 0 0-1 .267V5a2 2 0 0 1 2-2h7Z" clip-rule="evenodd"/>
+                                            <path fill-rule="evenodd" d="M8 7.054V11H4.2a2 2 0 0 1 .281-.432l2.46-2.87A2 2 0 0 1 8 7.054ZM10 7v4a2 2 0 0 1-2 2H4v6a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3Z" clip-rule="evenodd"/>
+                                        </svg>
+                                    </button>
                                 </td>
                             </tr>
                         @endforeach
