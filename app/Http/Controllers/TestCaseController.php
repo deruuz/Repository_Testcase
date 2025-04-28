@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\TestCase;
@@ -34,12 +33,12 @@ class TestCaseController extends Controller
         $perPage = $request->get('perPage', 10); // Ambil perPage dari URL, default 10 kalau kosong
     
         // $query = TestCase::query();
-        $query = TestCase::with(['category', 'type']);
+        $query = TestCase::with(['category', 'jenis']);
     
         if ($search = $request->get('search')) {
             $query->where('nama_test_case', 'like', "%$search%")
-                  ->orWhere('steps', 'like', "%$search%")
-                  ->orWhere('expected_result', 'like', "%$search%");
+                ->orWhere('steps', 'like', "%$search%")
+                ->orWhere('expected_result', 'like', "%$search%");
         }
     
         $testCases = $query->paginate($perPage)->appends($request->except('page'));

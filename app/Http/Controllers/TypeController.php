@@ -35,7 +35,7 @@ class TypeController extends Controller
     {
         // Validasi input kategori
         $request->validate([
-            'name' => 'required|string|max:255|unique:types', // Pastikan nama kategori unik
+            'name' => 'required|string|max:255|unique:type', // Pastikan nama kategori unik
             'description' => 'nullable|string|max:1000', // Deskripsi kategori boleh kosong
         ]);
 
@@ -44,7 +44,7 @@ class TypeController extends Controller
 
         // Redirect ke halaman kategori dengan pesan sukses
         return redirect()->route('admin.type.index')
-            ->with('success', 'Type created successfully.');
+            ->with('success', 'type created successfully.');
     }
 
     /**

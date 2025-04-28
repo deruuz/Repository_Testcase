@@ -26,7 +26,7 @@ class TestCase extends Model
         return $this->belongsTo(Category::class, 'kategori');
     }
 
-    public function type()
+    public function jenis()
     {
         return $this->belongsTo(Type::class, 'type');
     }

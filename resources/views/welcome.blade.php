@@ -22,7 +22,7 @@
           class="fixed w-full z-20 top-0 start-0 bg-opacity-90 backdrop-blur-md dark:bg-opacity-50 shadow"
         >
           <div
-            class="container mx-auto flex flex-wrap items-center justify-between mx-auto p-4 transition duration-300 ease-in-out px-4 mx-auto max-w-7xl sm:px-6 lg:px-8"
+            class="container mx-auto flex flex-wrap items-center justify-between p-4 transition duration-300 ease-in-out px-4 max-w-7xl sm:px-6 lg:px-8"
           >
             <a href="" class="flex items-center space-x-3 rtl:space-x-reverse">
               <img
@@ -358,10 +358,10 @@
 
                   <!-- Type -->
                   <td class="px-4 py-4 relative">
-                    {{ $testcase->type->name ?? '-' }}
+                    {{ $testcase->jenis->name ?? '-' }}
                     <button
                       type="button"
-                      onclick="copyText(`{{ $testcase->type->name ?? '-' }}`)"
+                      onclick="copyText(`{{ $testcase->jenis->name ?? '-' }}`)"
                       class="copy-btn invisible group-hover:visible absolute top-1/2 right-2 transform -translate-y-1/2 text-xs"
                       title="Copy Type"
                     >
