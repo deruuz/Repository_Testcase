@@ -29,12 +29,34 @@ class TestCaseController extends Controller
 
     //     return view('admin.testcases.index', compact('testCases'));
     // }
+    // {
+    //     $perPage = $request->get('perPage', 10); // Ambil perPage dari URL, default 10 kalau kosong
+    
+    //     // $query = TestCase::query();
+    //     $query = TestCase::with(['category', 'jenis']);
+    
+    //     if ($search = $request->get('search')) {
+    //         $query->where('nama_test_case', 'like', "%$search%")
+    //             ->orWhere('kategori', 'like', "%$search%")
+    //             ->orWhere('type', 'like', "%$search%")
+    //             ->orWhere('steps', 'like', "%$search%")
+    //             ->orWhere('expected_result', 'like', "%$search%");
+    //     }
+    
+    //     $testCases = $query->paginate($perPage)->appends($request->except('page'));
+    
+    //     return view('admin.testcases.index', compact('testCases'));
+    // }
     {
-        $perPage = $request->get('perPage', 10); // Ambil perPage dari URL, default 10 kalau kosong
+        $perPage = $request->get('perPage', 200); // Ambil perPage dari URL, default 10 kalau kosong
+        $query = TestCase::with(['category', 'jenis']); // Mengambil test case beserta relasi category dan jenis
+        
+        // Jika ada filter kategori yang dipilih
+        if ($category = $request->get('category')) {
+            $query->where('kategori', $category);
+        }
     
-        // $query = TestCase::query();
-        $query = TestCase::with(['category', 'jenis']);
-    
+        // Jika ada pencarian
         if ($search = $request->get('search')) {
             $query->where('nama_test_case', 'like', "%$search%")
                 ->orWhere('kategori', 'like', "%$search%")
@@ -43,9 +65,13 @@ class TestCaseController extends Controller
                 ->orWhere('expected_result', 'like', "%$search%");
         }
     
+        // Paginate hasil query
         $testCases = $query->paginate($perPage)->appends($request->except('page'));
     
-        return view('admin.testcases.index', compact('testCases'));
+        // Ambil data kategori untuk dropdown
+        $categories = Category::all();
+    
+        return view('admin.testcases.index', compact('testCases', 'categories'));
     }
 
     /**

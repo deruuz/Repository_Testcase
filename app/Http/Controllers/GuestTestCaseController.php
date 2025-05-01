@@ -28,22 +28,47 @@ class GuestTestCaseController extends Controller
 
     //     return view('welcome', compact('testCases'));
     // }
+    // {
+    //     $perPage = $request->get('perPage', 10); // Ambil perPage dari URL, default 10 kalau kosong
+    
+    //     $query = TestCase::query();
+    
+    //     if ($search = $request->get('search')) {
+    //         $query->where('nama_test_case', 'like', "%$search%")
+    //               ->orWhere('kategori', 'like', "%$search%")
+    //               ->orWhere('type', 'like', "%$search%")
+    //               ->orWhere('steps', 'like', "%$search%")
+    //               ->orWhere('expected_result', 'like', "%$search%");
+    //     }
+    
+    //     $testCases = $query->paginate($perPage)->appends($request->except('page'));
+    
+    //     return view('welcome', compact('testCases', 'categories'));
+    // }
     {
         $perPage = $request->get('perPage', 10); // Ambil perPage dari URL, default 10 kalau kosong
+        
+        $query = TestCase::with('category'); // Pastikan relasi ke kategori ada di model TestCase
+        
+        // Filter berdasarkan kategori
+        if ($category = $request->get('category')) {
+            $query->where('kategori', $category); // Sesuaikan dengan nama kolom foreign key
+        }
     
-        $query = TestCase::query();
-    
+        // Filter berdasarkan pencarian
         if ($search = $request->get('search')) {
             $query->where('nama_test_case', 'like', "%$search%")
-                  ->orWhere('kategori', 'like', "%$search%")
-                  ->orWhere('type', 'like', "%$search%")
                   ->orWhere('steps', 'like', "%$search%")
                   ->orWhere('expected_result', 'like', "%$search%");
         }
     
+        // Paginate hasil query
         $testCases = $query->paginate($perPage)->appends($request->except('page'));
     
-        return view('welcome', compact('testCases'));
+        // Ambil data kategori untuk dropdown
+        $categories = \App\Models\Category::all();
+    
+        return view('welcome', compact('testCases', 'categories'));
     }
 
     /**
