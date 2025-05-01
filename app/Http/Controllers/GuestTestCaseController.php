@@ -35,6 +35,8 @@ class GuestTestCaseController extends Controller
     
         if ($search = $request->get('search')) {
             $query->where('nama_test_case', 'like', "%$search%")
+                  ->orWhere('kategori', 'like', "%$search%")
+                  ->orWhere('type', 'like', "%$search%")
                   ->orWhere('steps', 'like', "%$search%")
                   ->orWhere('expected_result', 'like', "%$search%");
         }
