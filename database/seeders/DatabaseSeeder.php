@@ -13,6 +13,13 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // Jalankan UserSeeder
-        $this->call(UserSeeder::class);
+        $this->call([
+            SynonymSeeder::class,
+            UserSeeder::class, 
+            CategoriesSeeder::class,
+            TypeSeeder::class,
+            TagSeeder::class,
+            TestCaseSeeder::class,
+        ]);
     }
 }

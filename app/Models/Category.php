@@ -19,6 +19,6 @@ class Category extends Model
     // Relasi ke TestCase
     public function testCases()
     {
-        return $this->hasMany(TestCase::class, 'category_id'); // Relasi ke banyak TestCase
+        return $this->hasMany(TestCase::class, 'kategori_id'); // Relasi ke banyak TestCase
     }
 }

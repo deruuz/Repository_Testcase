@@ -7,6 +7,7 @@
     <title>Repository TestCase</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@^2.0" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
@@ -115,22 +116,27 @@
 
     <section id="" class="pt-24 pb-14"></section>
 
-    <section id="About" class="mt-40 py-10 bg-transparent sm:py-16 lg:py-36 pt-24 pb-48 rounded-lg">
-        <div class="max-w-7xl mx-auto">
+    <section id="About" class="mt-40 py-10 bg-transparent sm:py-16 lg:py-36 pt-24 pb-48 rounded-lg px-4">
+        <div class="max-w-8xl mx-auto">
             <h1 class="text-4xl font-bold mb-6 text-center text-white">
                 Available Test Cases
             </h1>
 
             <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-6">
                 <!-- Search Box -->
-                <form method="GET" id="filter-form" action="#testcaseTable"
-                    class="flex flex-wrap md:flex-row gap-2 mb-6">
-                    <input type="text" name="search" value="{{ request('search') }}"
-                        oninput="document.getElementById('filter-form').submit()" placeholder="Search Test Case..."
-                        class="w-full md:w-80 p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
+                <form method="GET" id="filter-form" action="{{ route('welcome.testcases.index') }}#About"
+                    class="flex flex-wrap gap-3 mb-6 items-center">
+                    <input type="text" id="tag-input" name="search" value="{{ request('search') }}"
+                        placeholder="Search..."
+                        class="w-full md:w-72 p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
 
-                    <select name="category" onchange="document.getElementById('filter-form').submit()"
-                        class="w-48 p-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    <ul id="tag-suggestions"
+                        class="absolute z-10 w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg mt-1 max-h-40 overflow-auto hidden">
+                        <!-- Suggestions will appear here -->
+                    </ul>
+
+                    <select name="category"
+                        class="w-full md:w-64 p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                         <option value="">All Categories</option>
                         @foreach ($categories as $category)
                             <option value="{{ $category->id }}"
@@ -140,15 +146,55 @@
                         @endforeach
                     </select>
 
-                    <select name="perPage" onchange="document.getElementById('filter-form').submit()"
-                        class="w-20 p-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                        @foreach ([10, 25, 50, 100, 200] as $val)
-                            <option value="{{ $val }}"
-                                {{ request('perPage', 200) == $val ? 'selected' : '' }}>
-                                {{ $val }}
+                    <select name="type"
+                        class="w-full md:w-64 p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        <option value="">All Type</option>
+                        @foreach ($types as $type)
+                            <option value="{{ $type->id }}" {{ request('type') == $type->id ? 'selected' : '' }}>
+                                {{ $type->name }}
                             </option>
                         @endforeach
                     </select>
+
+                    <select name="priority"
+                        class="w-full md:w-64 p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        <option value="">All Priorities</option>
+                        @foreach (['critical', 'urgent', 'high', 'medium', 'low'] as $p)
+                            <option value="{{ $p }}" {{ request('priority') == $p ? 'selected' : '' }}>
+                                {{ ucfirst($p) }}
+                            </option>
+                        @endforeach
+                    </select>
+
+                    <select name="case_type"
+                        class="w-full md:w-64 p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        <option value="">All Case Types</option>
+                        <option value="positive" {{ request('case_type') == 'positive' ? 'selected' : '' }}>Positive
+                        </option>
+                        <option value="negative" {{ request('case_type') == 'negative' ? 'selected' : '' }}>Negative
+                        </option>
+                    </select>
+
+                    <select name="perPage"
+                        class="w-32 p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        @foreach ([10, 25, 50, 100, 200] as $size)
+                            <option value="{{ $size }}"
+                                {{ request('perPage', 10) == $size ? 'selected' : '' }}>
+                                Show {{ $size }}
+                            </option>
+                        @endforeach
+                    </select>
+
+                    <a href="{{ route('welcome.testcases.index') }}"
+                        class="px-4 py-3 rounded-lg bg-gray-500 text-white hover:bg-gray-600 focus:ring-2 focus:ring-gray-400 focus:outline-none">
+                        Clear Filter
+                    </a>
+
+                    <button type="submit"
+                        class="px-4 py-3 rounded-lg bg-blue-600 text-white hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                        Apply Filter
+                    </button>
+
                 </form>
 
                 <!-- Action Buttons -->
@@ -166,35 +212,50 @@
                         class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-semibold rounded-lg transition duration-200 w-full md:w-auto">
                         Copy Selected
                     </button>
+
+                    <button type="button" onclick="resetUsedStatus()"
+                        class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold rounded-lg transition duration-200 w-full md:w-auto">
+                        Clear Used
+                    </button>
                 </div>
             </div>
 
             <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
                 <table id="testcaseTable"
-                    class="table-fixed w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                    class="min-w-[2000px] w-full text-sm text-left text-gray-500 dark:text-gray-400 border-0">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
                             <th class="w-12 p-4">
                                 <input id="checkbox-all" type="checkbox" class="w-4 h-4"
                                     onclick="toggleAll(this)" />
                             </th>
-                            <th class="w-20 px-4 py-3">No</th>
-                            <th class="w-32 px-4 py-3">Category</th>
-                            <th class="w-32 px-4 py-3">Type</th>
-                            <th class="w-64 px-4 py-3">TestCase Name / Description</th>
-                            <th class="w-96 px-4 py-3">Steps</th>
-                            <th class="w-96 px-4 py-3">Test Data</th>
-                            <th class="w-96 px-4 py-3">Expected Result</th>
+                            <th class="px-6 py-3">No</th>
+                            <th class="px-6 py-3">Category</th>
+                            <th class="px-6 py-3">Type</th>
+                            <th class="px-6 py-3 min-w-[180px]">TestCase Name</th>
+                            <th class="px-6 py-3">Steps</th>
+                            <th class="px-6 py-3 min-w-[180px]">TestCase Type</th>
+                            <th class="px-6 py-3">Priority</th>
+                            <th class="px-6 py-3 min-w-[180px]">Test Data</th>
+                            <th class="px-6 py-3 min-w-[180px]">Expected Result</th>
+                            <th class="px-6 py-3 min-w-[180px]">Used Status</th>
+                            <th class="px-6 py-3">Tags</th>
+
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($testCases as $testcase)
                             <tr
                                 class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 group">
-                                <td class="w-4 p-4">
+                                {{-- <td class="w-4 p-4">
                                     <input type="checkbox" name="selected_testcases[]"
                                         value="{{ $testcase->test_case_id }}" form="export-selected-form"
                                         class="row-checkbox w-4 h-4" />
+                                </td> --}}
+
+                                <td class="w-4 p-4">
+                                    <input type="checkbox" class="row-checkbox w-4 h-4" name="selected_testcases[]"
+                                        value="{{ $testcase->test_case_id }}" form="export-selected-form" />
                                 </td>
 
                                 <!-- Nomor -->
@@ -297,10 +358,40 @@
                                 </td>
 
                                 <!-- Test Data -->
+
+                                <td class="px-6 py-3 text-center">
+                                    <span id="status-label-{{ $testcase->case_type }}"
+                                        class="text-xs px-2 py-1 rounded 
+            {{ $testcase->case_type == 'positive'
+                ? 'bg-green-500 text-white'
+                : ($testcase->case_type == 'negative'
+                    ? 'bg-red-500 text-white'
+                    : 'bg-gray-300 text-black') }}">
+                                        {{ $testcase->case_type == 'positive' ? 'Positive' : ($testcase->case_type == 'negative' ? 'Negative' : 'Unknown') }}
+                                    </span>
+                                </td>
+                                <button type="button"
+                                    onclick="copyText(`{{ strip_tags($testcase->case_type) }}`, this)"
+                                    class="copy-btn invisible group-hover:visible absolute top-1/2 right-2 transform -translate-y-1/2 text-xs"
+                                    title="Copy Steps">
+                                    <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
+                                        xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                        fill="currentColor" viewBox="0 0 24 24">
+                                        <path fill-rule="evenodd"
+                                            d="M18 3a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-1V9a4 4 0 0 0-4-4h-3a1.99 1.99 0 0 0-1 .267V5a2 2 0 0 1 2-2h7Z"
+                                            clip-rule="evenodd" />
+                                        <path fill-rule="evenodd"
+                                            d="M8 7.054V11H4.2a2 2 0 0 1 .281-.432l2.46-2.87A2 2 0 0 1 8 7.054ZM10 7v4a2 2 0 0 1-2 2H4v6a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3Z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                </button>
+                                </td>
+
+                                <!-- Test Data -->
                                 <td class="px-4 py-4 relative">
-                                    {!! nl2br(e($testcase->test_data)) !!}
+                                    {!! nl2br(e($testcase->priority)) !!}
                                     <button type="button"
-                                        onclick="copyText(`{{ strip_tags($testcase->test_data) }}`, this)"
+                                        onclick="copyText(`{{ strip_tags($testcase->priority) }}`, this)"
                                         class="copy-btn invisible group-hover:visible absolute top-1/2 right-2 transform -translate-y-1/2 text-xs"
                                         title="Copy Steps">
                                         <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
@@ -315,6 +406,17 @@
                                         </svg>
                                     </button>
                                 </td>
+
+                                <td class="px-4 py-4 relative max-w-xs break-words whitespace-pre-line">
+                                    {!! nl2br(e($testcase->test_data)) !!}
+                                    <button type="button"
+                                        onclick="copyText(`{{ strip_tags($testcase->test_data) }}`, this)"
+                                        class="copy-btn invisible group-hover:visible absolute top-1/2 right-2 transform -translate-y-1/2 text-xs"
+                                        title="Copy Steps">
+                                        <svg class="w-6 h-6 text-gray-800 dark:text-white" ...> ... </svg>
+                                    </button>
+                                </td>
+
 
                                 <!-- Expected Result -->
                                 <td class="px-4 py-4 relative">
@@ -334,6 +436,35 @@
                                                 clip-rule="evenodd" />
                                         </svg>
                                     </button>
+                                </td>
+
+                                <td
+                                    class="px-6 py-3 text-center flex flex-col-reverse items-center justify-center gap-2">
+                                    <span id="status-label-{{ $testcase->test_case_id }}"
+                                        class="text-xs px-2 py-1 rounded mb-2 status-label">
+                                        Unused
+                                    </span>
+
+                                    <label class="inline-flex items-center cursor-pointer mt-2 w-fit">
+                                        <input type="checkbox" data-id="{{ $testcase->test_case_id }}"
+                                            class="sr-only peer row-checkbox used-toggle">
+                                        <div
+                                            class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600">
+                                        </div>
+                                    </label>
+                                </td>
+
+
+                                <td>
+                                    <div class="flex flex-wrap gap-2">
+                                        @foreach ($testcase->tag_names as $tagName)
+                                            <span
+                                                class="bg-blue-600 text-white px-3 py-1 rounded-full text-sm max-w-[80px] truncate"
+                                                title="{{ $tagName }}">
+                                                {{ $tagName }}
+                                            </span>
+                                        @endforeach
+                                    </div>
                                 </td>
                             </tr>
                         @endforeach
@@ -406,6 +537,104 @@
             }
         </style>
 
+
+        {{-- Script for suggest tag --}}
+        <script>
+            const input = document.getElementById("tag-input");
+            const suggestions = document.getElementById("tag-suggestions");
+
+            // Menangani input dan menampilkan saran tag
+            input.addEventListener("input", function() {
+                const query = input.value.trim();
+                if (query.length < 2) {
+                    suggestions.innerHTML = "";
+                    suggestions.classList.add("hidden");
+                    return;
+                }
+
+                fetch(`/api/tags/search?query=${query}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        suggestions.innerHTML = "";
+                        data.forEach(tag => {
+                            const li = document.createElement("li");
+                            li.textContent = tag.name;
+                            li.className =
+                                "px-4 py-2 hover:bg-gray-200 text-white dark:hover:bg-gray-700 cursor-pointer";
+                            li.addEventListener("click", () => selectTag(tag.name, tag.id));
+                            suggestions.appendChild(li);
+                        });
+                        suggestions.classList.remove("hidden");
+                    });
+            });
+
+            // Menangani keydown untuk memasukkan tag yang dipilih ke dalam input
+            input.addEventListener("keydown", function(e) {
+                if (e.key === "Enter") {
+                    e.preventDefault();
+                    if (input.value.trim() !== "") {
+                        selectTag(input.value.trim());
+                    }
+                }
+            });
+
+            // Fungsi untuk menambahkan tag ke dalam input
+            function selectTag(name, id = null) {
+                // Masukkan nama tag ke dalam input
+                input.value = name;
+
+                // Hilangkan saran setelah memilih tag
+                suggestions.innerHTML = "";
+                suggestions.classList.add("hidden");
+            }
+        </script>
+
+        {{-- Script untuk menangani localStorage --}}
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Inisialisasi status dari localStorage
+                const usedTestCases = JSON.parse(localStorage.getItem('usedTestCases') || '{}');
+
+                // Update tampilan checkbox dan label
+                document.querySelectorAll('.used-toggle').forEach(checkbox => {
+                    const testcaseId = checkbox.getAttribute('data-id');
+                    const statusLabel = document.getElementById(`status-label-${testcaseId}`);
+
+                    // Set status checkbox
+                    checkbox.checked = usedTestCases[testcaseId] || false;
+
+                    // Update label
+                    updateStatusLabel(statusLabel, checkbox.checked);
+
+                    // Event listener untuk perubahan checkbox
+                    checkbox.addEventListener('change', function() {
+                        const isUsed = this.checked;
+
+                        // Update localStorage
+                        usedTestCases[testcaseId] = isUsed;
+                        localStorage.setItem('usedTestCases', JSON.stringify(usedTestCases));
+
+                        // Update label
+                        updateStatusLabel(statusLabel, isUsed);
+                    });
+                });
+            });
+
+            function updateStatusLabel(label, isUsed) {
+                label.textContent = isUsed ? 'Used' : 'Unused';
+                label.className =
+                    `text-xs px-2 py-1 rounded mb-2 ${isUsed ? 'bg-green-500 text-white' : 'bg-gray-300 text-black'}`;
+            }
+
+            // Fungsi untuk reset semua status
+            function resetUsedStatus() {
+                localStorage.removeItem('usedTestCases');
+                location.reload();
+            }
+        </script>
+
+
+
         <script>
             function toggleAll(source) {
                 document.querySelectorAll('.row-checkbox').forEach(cb => cb.checked = source.checked);
@@ -430,11 +659,13 @@
                     cb => cb.closest('tr'));
                 if (selectedRows.length === 0) return alert('Please select at least one Test Case.');
 
-                let textToCopy = "Nomor | Kategori | Type | Nama TestCase | Steps | Test Data | Expected Result\n";
+                let textToCopy =
+                    "Nomor | Kategori | Type | Nama TestCase | Steps | TestCase Type | Priority | Test Data | Expected Result\n";
                 selectedRows.forEach(row => {
                     const cells = row.querySelectorAll('td');
                     let rowText = [];
-                    for (let i = 1; i < cells.length; i++) {
+                    // Mengambil semua kolom kecuali dua terakhir
+                    for (let i = 1; i < cells.length - 3; i++) {
                         rowText.push(cells[i].innerText.trim());
                     }
                     textToCopy += rowText.join(' | ') + "\n";

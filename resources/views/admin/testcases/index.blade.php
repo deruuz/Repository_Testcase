@@ -18,11 +18,15 @@
 
     <div class="p-6">
         <form method="GET" id="filter-form" class="flex flex-wrap gap-3 mb-6 items-center">
-            <input type="text" name="search" value="{{ request('search') }}" placeholder="Search..."
-                oninput="document.getElementById('filter-form').submit()"
+            <input type="text" name="search" id="tag-input" value="{{ request('search') }}" placeholder="Search..."
                 class="w-full md:w-72 p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
 
-            <select name="category" onchange="document.getElementById('filter-form').submit()"
+            <ul id="tag-suggestions"
+                class="absolute z-10 w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg mt-1 max-h-40 overflow-auto hidden">
+                <!-- Suggestions will appear here -->
+            </ul>
+
+            <select name="category"
                 class="w-full md:w-64 p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                 <option value="">All Categories</option>
                 @foreach ($categories as $category)
@@ -32,7 +36,34 @@
                 @endforeach
             </select>
 
-            <select name="perPage" onchange="document.getElementById('filter-form').submit()"
+            <select name="type"
+                class="w-full md:w-64 p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                <option value="">All Type</option>
+                @foreach ($types as $type)
+                    <option value="{{ $type->id }}" {{ request('type') == $type->id ? 'selected' : '' }}>
+                        {{ $type->name }}
+                    </option>
+                @endforeach
+            </select>
+
+            <select name="priority"
+                class="w-full md:w-64 p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                <option value="">All Priorities</option>
+                @foreach (['critical', 'urgent', 'high', 'medium', 'low'] as $p)
+                    <option value="{{ $p }}" {{ request('priority') == $p ? 'selected' : '' }}>
+                        {{ ucfirst($p) }}
+                    </option>
+                @endforeach
+            </select>
+
+            <select name="case_type"
+                class="w-full md:w-64 p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                <option value="">All Case Types</option>
+                <option value="positive" {{ request('case_type') == 'positive' ? 'selected' : '' }}>Positive</option>
+                <option value="negative" {{ request('case_type') == 'negative' ? 'selected' : '' }}>Negative</option>
+            </select>
+
+            <select name="perPage"
                 class="w-32 p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                 @foreach ([10, 25, 50, 100, 200] as $size)
                     <option value="{{ $size }}" {{ request('perPage', 10) == $size ? 'selected' : '' }}>
@@ -40,9 +71,20 @@
                     </option>
                 @endforeach
             </select>
+
+            <button type="submit"
+                class="px-4 py-3 rounded-lg bg-blue-600 text-white hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                Apply Filter
+            </button>
+            <a href="{{ route('admin.testcases.index') }}"
+                class="px-4 py-3 rounded-lg bg-gray-500 text-white hover:bg-gray-600 focus:ring-2 focus:ring-gray-400 focus:outline-none">
+                Clear Filter
+            </a>
         </form>
 
+
         <div class="flex flex-wrap gap-2 mb-4">
+
             <a href="{{ route('admin.testcases.create') }}"
                 class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold rounded-lg transition duration-200">
                 + Add TestCase
@@ -60,10 +102,16 @@
                 class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-semibold rounded-lg transition duration-200">
                 Copy Selected
             </button>
+            <form method="POST" action="{{ route('admin.testcases.resetOrder') }}">
+                @csrf
+                <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                    Reset Urutan
+                </button>
+            </form>
         </div>
 
-        <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+        <div class="relative overflow-x-auto shadow-sm bg-gray-800 rounded-lg">
+            <table class="min-w-[2000px] w-full text-sm text-left text-gray-500 dark:text-gray-400">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
                         <th class="p-4"><input id="checkbox-all" type="checkbox" class="w-4 h-4"
@@ -71,17 +119,20 @@
                         <th class="px-6 py-3">Number</th>
                         <th class="px-6 py-3">Category</th>
                         <th class="px-6 py-3">Type</th>
-                        <th class="px-6 py-3">TestCase Name</th>
+                        <th class="px-6 py-3 min-w-[180px]">TestCase Name</th>
                         <th class="px-6 py-3">Steps</th>
+                        <th class="px-6 py-3 min-w-[180px]">TestCase Type</th>
+                        <th class="px-6 py-3">Priority</th>
                         <th class="px-6 py-3">Test Data</th>
-                        <th class="px-6 py-3">Expected Result</th>
+                        <th class="px-6 py-3 min-w-[180px]">Expected Result</th>
+                        <th class="px-6 py-3 min-w-[180px]">Admin Status</th>
                         <th class="px-6 py-3">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($testCases as $testcase)
-                        <tr
-                            class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 group">
+                        <tr data-id="{{ $testcase->test_case_id }}"
+                            class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 group sortable-item">
                             <td class="p-4">
                                 <input type="checkbox" name="selected_testcases[]" value="{{ $testcase->test_case_id }}"
                                     form="export-selected-form" class="row-checkbox w-4 h-4" />
@@ -97,14 +148,28 @@
                             <td class="px-6 py-4">{{ $testcase->jenis->name ?? '-' }}</td>
                             <td class="px-6 py-4">{{ $testcase->nama_test_case }}</td>
                             <td class="px-6 py-4">{{ $testcase->steps }}</td>
+                            <td class="px-6 py-4 min-w-[180px] text-center">
+                                <span
+                                    class="text-xs px-2 py-1 rounded 
+                                    {{ $testcase->case_type == 'positive'
+                                        ? 'bg-green-500 text-white'
+                                        : ($testcase->case_type == 'negative'
+                                            ? 'bg-red-500 text-white'
+                                            : 'bg-gray-300 text-black') }}">
+                                    {{ $testcase->case_type == 'positive' ? 'Positive' : ($testcase->case_type == 'negative' ? 'Negative' : 'Unknown') }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4">{{ $testcase->priority }}</td>
                             <td class="px-6 py-4">{{ $testcase->test_data }}</td>
                             <td class="px-6 py-4">{{ $testcase->expected_result }}</td>
+                            <td class="px-6 py-4">{{ $testcase->admin_status }}</td>
                             <td class="px-6 py-4 flex gap-2">
                                 <a href="{{ route('admin.testcases.edit', $testcase) }}"
-                                    class="text-blue-600 hover:underline text-sm">Edit</a>
+                                    class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">Edit</a>
                                 <form method="POST" action="{{ route('admin.testcases.destroy', $testcase) }}">
                                     @csrf @method('DELETE')
-                                    <button type="submit" class="text-red-600 hover:underline text-sm">Delete</button>
+                                    <button type="submit"
+                                        class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Delete</button>
                                 </form>
                             </td>
                         </tr>
@@ -145,6 +210,85 @@
             }
         }
     </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+    <script>
+        // SORTABLE FUNCTIONALITY
+        const el = document.querySelector("tbody"); // tbody target drag
+        new Sortable(el, {
+            animation: 150,
+            onEnd: function() {
+                const ids = Array.from(el.children).map(row => row.dataset.id);
+
+                fetch("{{ route('admin.testcases.reorder') }}", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                        },
+                        body: JSON.stringify({
+                            ids
+                        })
+                    })
+                    .then(res => res.json())
+                    .then(data => console.log(data))
+                    .catch(err => console.error(err));
+            }
+        });
+    </script>
+
+    {{-- Script for suggest tag --}}
+    <script>
+        const input = document.getElementById("tag-input");
+        const suggestions = document.getElementById("tag-suggestions");
+
+        // Menangani input dan menampilkan saran tag
+        input.addEventListener("input", function() {
+            const query = input.value.trim();
+            if (query.length < 2) {
+                suggestions.innerHTML = "";
+                suggestions.classList.add("hidden");
+                return;
+            }
+
+            fetch(`/api/tags/search?query=${query}`)
+                .then(res => res.json())
+                .then(data => {
+                    suggestions.innerHTML = "";
+                    data.forEach(tag => {
+                        const li = document.createElement("li");
+                        li.textContent = tag.name;
+                        li.className =
+                            "px-4 py-2 hover:bg-gray-200 text-white dark:hover:bg-gray-700 cursor-pointer";
+                        li.addEventListener("click", () => selectTag(tag.name, tag.id));
+                        suggestions.appendChild(li);
+                    });
+                    suggestions.classList.remove("hidden");
+                });
+        });
+
+        // Menangani keydown untuk memasukkan tag yang dipilih ke dalam input
+        input.addEventListener("keydown", function(e) {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                if (input.value.trim() !== "") {
+                    selectTag(input.value.trim());
+                }
+            }
+        });
+
+        // Fungsi untuk menambahkan tag ke dalam input
+        function selectTag(name, id = null) {
+            // Masukkan nama tag ke dalam input
+            input.value = name;
+
+            // Hilangkan saran setelah memilih tag
+            suggestions.innerHTML = "";
+            suggestions.classList.add("hidden");
+        }
+    </script>
+
+
 
     <script>
         function toggleAll(source) {

@@ -9,6 +9,8 @@ use App\Http\Controllers\DashboardController;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\TypeController;
+use App\Http\Controllers\SynonymController;
+use App\Http\Controllers\TagController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,7 +23,7 @@ use App\Http\Controllers\TypeController;
 |
 */
 
-Route::get('/', [GuestTestCaseController::class, 'index'])->name('guest.testcases.index');
+Route::get('/', [GuestTestCaseController::class, 'index'])->name('welcome.testcases.index');
 Route::post('/testcases-export-selected', [GuestTestCaseController::class, 'exportSelected'])->name('guest.testcases.exportSelected');
 
 // AUTHENTICATION ROUTE
@@ -53,7 +55,32 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/type/{type}/edit', [TypeController::class, 'edit'])->name('admin.type.edit');  // Menampilkan form edit tipe
     Route::put('/admin/type/{type}', [TypeController::class, 'update'])->name('admin.type.update'); // Mengupdate tipe
     Route::delete('/admin/type/{type}', [TypeController::class, 'destroy'])->name('admin.type.destroy'); // Menghapus tipe
+
+    // Rute reorder test cases
+    Route::post('/admin/testcases/reorder', [TestCaseController::class, 'reorder'])->name('admin.testcases.reorder');
+    Route::post('/admin/testcases/reset-order', [TestCaseController::class, 'resetOrder'])->name('admin.testcases.resetOrder');
+
+
+  // CRUD untuk Synonym
+    Route::get('/admin/synonyms', [SynonymController::class, 'index'])->name('admin.synonyms.index');        // List semua
+    Route::get('/admin/synonyms/create', [SynonymController::class, 'create'])->name('admin.synonyms.create'); // Form tambah
+    Route::post('/admin/synonyms', [SynonymController::class, 'store'])->name('admin.synonyms.store');        // Simpan data baru
+    Route::get('/admin/synonyms/{synonym}/edit', [SynonymController::class, 'edit'])->name('admin.synonyms.edit'); // Form edit
+    Route::put('/admin/synonyms/{synonym}', [SynonymController::class, 'update'])->name('admin.synonyms.update'); // Update data
+    Route::delete('/admin/synonyms/{synonym}', [SynonymController::class, 'destroy'])->name('admin.synonyms.destroy'); // Hapus data
+
+  // CRUD untuk tag
+    Route::get('/admin/tag', [TagController::class, 'index'])->name('admin.tag.index');        // List semua
+    Route::get('/admin/tag/create', [TagController::class, 'create'])->name('admin.tag.create');        // List semua
+    Route::post('/admin/tag', [TagController::class, 'store'])->name('admin.tag.store');        // List semua
+    Route::get('/admin/tag/{tag}/edit', [TagController::class, 'edit'])->name('admin.tag.edit');        // List semua
+    Route::put('/admin/tag/{tag}', [TagController::class, 'update'])->name('admin.tag.update');        // List semua
+    Route::delete('/admin/tag/{tag}', [TagController::class, 'destroy'])->name('admin.tag.destroy');        // List semua
+
 });
+
+    Route::get('/api/tags/search', [TagController::class, 'search']);
+
 
 // Rute untuk Guest View Only
 Route::middleware(['auth', 'guestonly'])->group(function () {
@@ -61,8 +88,15 @@ Route::middleware(['auth', 'guestonly'])->group(function () {
     Route::get('/guest/testcases-export', [GuestTestCaseController::class, 'export'])->name('guest.testcases.export');
 });
 
+// Guest testcase reset status and toggle status
+   Route::patch('/guest/testcases/{id}/toggle-used', [GuestTestCaseController::class, 'toggleUsed'])->name('guest.testcases.toggleUsed');
+   Route::get('/guest/testcases/reset-used', [GuestTestCaseController::class, 'resetUsed'])->name('guest.testcases.resetUsed');
+
+
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register');
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
+
+
