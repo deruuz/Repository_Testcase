@@ -123,7 +123,10 @@
             labels: kategoriData.labels,
             legend: {
                 labels: {
-                    colors: ['#fff', '#fff', '#fff', '#fff', '#fff']
+                    colors: ['#fff', '#fff', '#fff', '#fff', '#fff', '#fff', '#fff', '#fff', '#fff', '#fff', 
+                        '#fff', '#fff', '#fff', '#fff', '#fff', '#fff', '#fff', '#fff', '#fff', '#fff', '#fff', '#fff', '#fff', '#fff', '#fff', '#fff', '#fff', 
+                        '#fff', '#fff', '#fff', '#fff', '#fff', '#fff', '#fff'
+                    ]
                 }
             },
         };
@@ -135,7 +138,9 @@
             labels: tipeData.labels,
             legend: {
                 labels: {
-                    colors: ['#fff', '#fff', '#fff', '#fff', '#fff']
+                    colors: ['#fff', '#fff', '#fff', '#fff', '#fff', '#fff', '#fff', '#fff', '#fff', '#fff', '#fff', '#fff', '#fff', '#fff', '#fff', 
+                        '#fff', '#fff', '#fff', '#fff', '#fff', '#fff', '#fff', '#fff', '#fff', '#fff', '#fff', '#fff', '#fff', '#fff', '#fff', '#fff', '#fff', 
+                        '#fff', '#fff', '#fff', '#fff', '#fff', '#fff', '#fff']
                 }
             },
         };
